@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?fileVersion 4.0.0?><cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
+	<storageModule moduleId="org.eclipse.cdt.core.settings">
+		<cconfiguration id="com.sandbridgetech.sbdt.toolChain.debug.2046993959">
+			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="com.sandbridgetech.sbdt.toolChain.debug.2046993959" moduleId="org.eclipse.cdt.core.settings" name="Debug">
+				<externalSettings/>
+				<extensions>
+					<extension id="org.eclipse.cdt.sandblaster.binparser" point="org.eclipse.cdt.core.BinaryParser"/>
+					<extension id="com.sandbridgetech.sbdt.sbcc.errparser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.MakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+				</extensions>
+			</storageModule>
+			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+				<configuration artifactName="${ProjName}" buildProperties="" description="" id="com.sandbridgetech.sbdt.toolChain.debug.2046993959" name="Debug" parent="org.eclipse.cdt.build.core.emptycfg">
+					<folderInfo id="com.sandbridgetech.sbdt.toolChain.debug.2046993959.568543" name="/" resourcePath="">
+						<toolChain id="com.sandbridgetech.sbdt.toolChain.debug.1093615890" name="com.sandbridgetech.sbdt.toolChain.debug" superClass="com.sandbridgetech.sbdt.toolChain.debug">
+							<targetPlatform archList="xcoff-mt8" binaryParser="org.eclipse.cdt.sandblaster.binparser" id="com.sandbridgetech.sbdt.targetPlatform.418124160" isAbstract="false" name="GPT Simulator" osList="sbos,linux,other" superClass="com.sandbridgetech.sbdt.targetPlatform"/>
+							<builder id="com.sandbridgetech.sbdt.builder.1490925012" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="GPT DSP Builder" superClass="com.sandbridgetech.sbdt.builder"/>
+							<tool id="com.sandbridgetech.sbdt.tool.compiler.debug.1700797205" name="GPT DSP C Compiler" superClass="com.sandbridgetech.sbdt.tool.compiler.debug">
+								<inputType id="com.sandbridgetech.sbdt.compiler.input.1586480451" name="Compiler Input" superClass="com.sandbridgetech.sbdt.compiler.input"/>
+							</tool>
+							<tool id="com.sandbridgetech.sbdt.tool.compiler.cpp.debug.2024050048" name="GPT DSP C++ Compiler" superClass="com.sandbridgetech.sbdt.tool.compiler.cpp.debug"/>
+							<tool id="com.sandbridgetech.sbdt.linker.1985101214" name="GPT DSP C Linker" superClass="com.sandbridgetech.sbdt.linker">
+								<inputType id="com.sandbridgetech.sbdt.linker.input.437525507" name="Linker Input" superClass="com.sandbridgetech.sbdt.linker.input">
+									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
+								</inputType>
+							</tool>
+							<tool id="com.sandbridgetech.sbdt.cpp.linker.1816153752" name="GPT DSP C++ Linker" superClass="com.sandbridgetech.sbdt.cpp.linker"/>
+						</toolChain>
+					</folderInfo>
+					<sourceEntries>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Sources"/>
+					</sourceEntries>
+				</configuration>
+			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+		</cconfiguration>
+	</storageModule>
+	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+		<project id="sstv_rx.null.641940911" name="sstv_rx"/>
+	</storageModule>
+	<storageModule moduleId="scannerConfiguration">
+		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
+	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets">
+		<buildTargets>
+			<target name="all" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+				<buildCommand>make</buildCommand>
+				<buildArguments/>
+				<buildTarget>all</buildTarget>
+				<stopOnError>true</stopOnError>
+				<useDefaultCommand>true</useDefaultCommand>
+				<runAllBuilders>true</runAllBuilders>
+			</target>
+			<target name="clobber" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+				<buildCommand>make</buildCommand>
+				<buildArguments/>
+				<buildTarget>clobber</buildTarget>
+				<stopOnError>true</stopOnError>
+				<useDefaultCommand>true</useDefaultCommand>
+				<runAllBuilders>true</runAllBuilders>
+			</target>
+			<target name="sub" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+				<buildCommand>make</buildCommand>
+				<buildArguments/>
+				<buildTarget>sub</buildTarget>
+				<stopOnError>true</stopOnError>
+				<useDefaultCommand>true</useDefaultCommand>
+				<runAllBuilders>true</runAllBuilders>
+			</target>
+		</buildTargets>
+	</storageModule>
+</cproject>
