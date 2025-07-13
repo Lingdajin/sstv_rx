@@ -1,2 +1,5 @@
 eclipse.preferences.version=1
+encoding//Common_Headers/function.h=UTF-8
+encoding//Common_Sources/function.c=UTF-8
 encoding//Sources/rx_thread.c=UTF-8
+encoding//Sources/sstv_handle_thread.c=UTF-8

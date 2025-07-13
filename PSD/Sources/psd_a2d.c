@@ -4,6 +4,7 @@
 
 #include "psd_defines.h"
 #include "function.h"
+#define CORE_ADDR_BASE(core_id)	(0x80000000 | (core_id) << 28)
 
 void
 start_a2d(
@@ -36,7 +37,7 @@ start_a2d(
 			| (((nbufs-1)&0xff)<<20)     /* buffers         */
 			| ((0&0x3)<<18)              /* no PM timer        */
 			| ((0&0x7)<<15)              /* no NMPT timer        */
-			| ((nbytes-8)&0x7ff8);       /* bytes truncated to multiple of 8 */
+			| ((nbytes*2-8)&0x7ff8);       /* bytes truncated to multiple of 8 */
 
 	a2d[2] = (unsigned)ibuf;       /* I start register */
 	a2d[4] = (unsigned)qbuf;       /* Q start register */

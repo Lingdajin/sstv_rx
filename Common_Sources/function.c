@@ -1,24 +1,48 @@
 #include "function.h"
 #include "os/osapi.h"
 
-int sstv_handle_done_flag; // SSTV处理完成标志
+short frequency_buf_10ms[WINDOW_10MS]; // 用于存储10ms的频率数据
+short frequency_buf_1ms[WINDOW_1MS]; // 用于存储10ms的频率数据
+short frequency_buf_88ms[SSTV_SCAN_LINE_LENGTH]; // 用于存储88ms的频率数据
+short frequency_buf_250us[WINDOW_250US]; // 用于存储250us的频率数据
+short frequency_buf_44ms[SSTV_SCAN_LINE_RY_BY_LENGTH]; // 用于存储44ms的频率数据
+
+short Y_88ms[SSTV_SCAN_LINE_LENGTH]; // 用于存储Y信号的88ms数据
+short RBY_44ms[SSTV_SCAN_LINE_RY_BY_LENGTH]; // 用于存储RBY信号的44ms数据
+
+// 全局数据数组
+short fx_y_lines[IMAGE_HEIGHT][IMAGE_WIDTH];      // 存储所有行的Y值
+short fx_ry_lines[IMAGE_HEIGHT/2][IMAGE_WIDTH];   // 存储RY值
+short fx_by_lines[IMAGE_HEIGHT/2][IMAGE_WIDTH];   // 存储BY值
+
+unsigned char image_data[IMAGE_WIDTH * IMAGE_HEIGHT * BYTES_PER_PIXEL]; // 存储最终图像数据
+
+//图像保存路径
+const char* bmp_file_path = "sstv_image.bmp";
+
+int sstv_handle_done_flag = 0; // SSTV处理完成标志
 extern int sstv_iq_data_ready_flag; // SSTV数据准备就绪标志
 extern short frequency_buf[PSDI_TOTAL_SAMPLE_COUNT]; // 用于存储解调后的频率数据
-int frequency_buf_position = 0; //读取频率buffer指针
+int frequency_buf_position = PSDI_BUF_SIZE; //读取频率buffer指针
 
+int power_flag = 0;
 
 // 辅助函数：计算short类型数组的平均值
-static short calculate_average_short(short* data, int length) {
+short calculate_average_short(short* data, int length) {
+	long sum;
+	int i;
     if (length <= 0) return 0;
-    long sum = 0;
-    for (int i = 0; i < length; i++) {
+
+    sum = 0;
+
+    for (i = 0; i < length; i++) {
         sum += data[i];
     }
     return (short)(sum / length);
 }
 
 // 辅助函数：检查频率是否匹配目标频率（在容差范围内）
-static int is_vis_freq_match(short freq, short target_freq) {
+int is_vis_freq_match(short freq, short target_freq) {
     return abs(freq - target_freq) <= FREQ_TOLERANCE;
 }
 
@@ -612,4 +636,12 @@ void save_image()
 
     // 保存为BMP文件
     save_bmp(bmp_file_path, image_data, IMAGE_WIDTH, IMAGE_HEIGHT);
+}
+
+void get_power(short* I, short* Q, int length, int* power_buf)
+{
+	for(int i = 0; i < length; i++){
+		power_buf[i] = ((I[i] * I[i]) + (Q[i] * Q[i])) / 256;
+	}
+	power_flag = 1;
 }

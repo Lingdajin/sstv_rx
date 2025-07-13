@@ -1,0 +1,11 @@
+
+RX1_psdi_ibuf    %s0
+RX1_psdi_qbuf    %s0
+
+RX1_capture_ibuf %s0
+RX1_capture_qbuf %s0
+
+
+stRfDrv     %s2
+.init_rf	%s2
+

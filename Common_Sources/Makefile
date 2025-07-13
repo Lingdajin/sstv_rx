@@ -26,6 +26,7 @@ CFLAGS= $(INCLS) \
 	-O3  \
 	--inline \
 	--restrict \
+	--c99\
 #	--noclean 
 
 all: $(OBJS)

@@ -20,6 +20,8 @@
 
 #include "rf_drv.h"
 
+#define USE_HI_BAND 0
+
 uint32_t ret_data[40]={0};       //!<用来保存连续读返回的data值；
 
 
@@ -70,9 +72,9 @@ void iris404_config(void)
     SBX_GPIO_DIR_WRITE(SBX_GPIO_BASE(NODE_3), 0xFF, 0xFF);
 
 
-//    SBX_GPIO_DATA_WRITE(SBX_GPIO_BASE(NODE_3), 0xFC, 0x5A); // B01011010 - ifdef USE_HI_BAND == 1
+    SBX_GPIO_DATA_WRITE(SBX_GPIO_BASE(NODE_3), 0xFC, 0x5A); // B01011010 - ifdef USE_HI_BAND == 1
 //ifndef USE_HI_BAND == 1
-	SBX_GPIO_DATA_WRITE(SBX_GPIO_BASE(NODE_3), 0xFD, 0x0D); // B00011100 - ifndef HALF_FDD
+//	SBX_GPIO_DATA_WRITE(SBX_GPIO_BASE(NODE_3), 0xFD, 0x0D); // B00011100 - ifndef HALF_FDD
 //    SBX_GPIO_DATA_WRITE(SBX_GPIO_BASE(NODE_3), 0x54, 0x54); // 开机Rx，打开 DCDC_APT - ifdef HALF_FDD
 
     // 初始化sbx_gpio1
@@ -944,7 +946,7 @@ void iris404_rxctrl(int16_t onoff)
     	 *  	Bit 2: TXNRX (output: TX when high; RX when Low)
 	     */
 //#ifndef HALF_FDD
-    	SBX_GPIO_DATA_WRITE( SBX_GPIO_BASE(NODE_1), 0x04, 0x04);
+    	SBX_GPIO_DATA_WRITE( SBX_GPIO_BASE(NODE_1), 0x04, 0x00);	//疑似存在错误，修正
 //#else
 //		SBX_GPIO_DATA_WRITE( SBX_GPIO_BASE(NODE_1), 0x11, 0x10);
 //#endif

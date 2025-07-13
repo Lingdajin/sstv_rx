@@ -1,10 +1,12 @@
 #include "function.h"
 
-short frequency_buf_300ms[SSTV_TARGET_IQ_SAMPLE_RATE * 0.3]; // 300ms窗口的频率数据
+short frequency_buf_300ms[(int)(SSTV_TARGET_IQ_SAMPLE_RATE * 0.3)]; // 300ms窗口的频率数据
 
 SSTV_State sstv_state = SSTV_STATE_IDLE; // 初始状态
 
 int line_number = 0; // 当前行号
+
+extern const char* bmp_file_path;	//用来获取图片存储路径
 
 void sstv_handle_thread(void *arg)
 {
@@ -43,7 +45,7 @@ void sstv_handle_thread(void *arg)
             // line_number++;
             // if(line_number >= IMAGE_HEIGHT) {
             //     // 行扫描完成，切换到处理完成状态
-            //     sstv_state = SSTV_SATE_DONE;
+            //     sstv_state = SSTV_STATE_DONE;
             // }
             break;
         case SSTV_SATE_SCAN_LINE_DONE:
@@ -63,7 +65,7 @@ void sstv_handle_thread(void *arg)
             line_number++;
             if(line_number >= IMAGE_HEIGHT) {
                 // 行扫描完成，切换到处理完成状态
-                sstv_state = SSTV_SATE_DONE;
+                sstv_state = SSTV_STATE_DONE;
             }else {
                 sstv_state = SSTV_STATE_LINE_SYNC_SEARCH; // 切换到行同步扫描状态
             }
@@ -73,7 +75,7 @@ void sstv_handle_thread(void *arg)
             line_number++;
             if(line_number >= IMAGE_HEIGHT) {
                 // 行扫描完成，切换到处理完成状态
-                sstv_state = SSTV_SATE_DONE;
+                sstv_state = SSTV_STATE_DONE;
             }else {
                 sstv_state = SSTV_STATE_LINE_SYNC_SEARCH; // 切换到扫描行同步扫描状态
             }

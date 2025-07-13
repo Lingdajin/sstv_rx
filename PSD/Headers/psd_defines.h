@@ -23,9 +23,9 @@
 
 #define PSDI_BUF_COUNT              2
 #define PSDI_BUF_SAMPLE_COUNT       128
-#define PSDI_BUF_SIZE               (PSDI_BUF_SAMPLE_COUNT*2)
+//#define PSDI_BUF_SIZE               (PSDI_BUF_SAMPLE_COUNT*2)
 #define PDSI_INPUT_SIZE				(PSDI_BUF_COUNT * PSDI_BUF_SAMPLE_COUNT) //PSD收的一个符号的长度(其实和buffer长度相同)
-#define PSDI_TOTAL_SAMPLE_COUNT     (PSDI_BUF_COUNT*PSDI_BUF_SAMPLE_COUNT)
+//#define PSDI_TOTAL_SAMPLE_COUNT     (PSDI_BUF_COUNT*PSDI_BUF_SAMPLE_COUNT)
 /* samples capture, each for I & Q */
 #define CAPTURE_SAMPLE_COUNT        (PSDI_TOTAL_SAMPLE_COUNT*10)//(2112<<5)
 

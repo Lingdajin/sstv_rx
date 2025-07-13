@@ -33,20 +33,23 @@ void init_rf(void)
 	reg_write(0x8,0x1FDA200); // ACP chip RXLOW2 port
 //	reg_write(0x4,0x08A0000); // ACP Band8 Tx freq 897MHz
 //	reg_write(0x5,0x0000000);
-	reg_write(0x0F,0x1D89D89); // ACP Band8 Rx freq 942MHz
-	reg_write(0x0E,0x0900000);
-
-//	stRfDrv.SetFreq(842000000, 842000000);
+//	reg_write(0x0F,0x1D89D89); // ACP Band8 Rx freq 942MHz
+//	reg_write(0x0E,0x0900000);
+	stRfDrv.SetMode(0);	//0:TDD mode
+	stRfDrv.SetFreq(837000000, 945000000);
+//	stRfDrv.SetFreq(2404970000, 2404970000);
 
 	reg_write(0x0,0x1F34E62 ); // bit14 RAMPOUT LDO on
 	reg_write(0x1,0x0060C0B  ); // +9dBm
 
     //Rx
+//	stRfDrv.TxCtrl(0);
     stRfDrv.RxCtrl(1);
     PRINT_ON(printf("rx switch on\n"));
     osFastPause(1000);
-    gsFreqGain.rxgain = 30;
+    gsFreqGain.rxgain = 50;
 	stRfDrv.SetRxGain(0, gsFreqGain.rxgain);
+
 
     //Tx
 //    stRfDrv.TxCtrl(1);
@@ -73,6 +76,7 @@ void init_rf(void)
 	PRINT_ON(printf("set RxInd %d\n",dB));
 	iris404_getfreq(&txf,&rxf);
 	printf("the txf is [%.9f]MHz, rxf is [%.9f]MHz.\n",txf,rxf);
+	printf("the addr10 is:%X", reg_read(0x0A));
 	osFastPause(1000);
 	//Tx
 }

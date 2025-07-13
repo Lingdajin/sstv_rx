@@ -8,6 +8,8 @@
 #include <stdbool.h>
 #include "sbdsp/sbatan.h"
 
+#define CORE_ADDR_BASE(core_id)	(0x80000000 | (core_id) << 28)
+
 // 定点数定义
 #define SHIFT_BITS 12 // 定义定点数的小数位数
 #define ONE_SHIFTED (1 << SHIFT_BITS) // 定点数的1
@@ -17,7 +19,8 @@
 #define SB_FXATAN_PI_SCALE 32767  // sb_fxatan中π对应的比例因子
 
 #define SSTV_TARGET_IQ_SAMPLE_RATE 48000 //目标I/Q对的采样率
-#define PSDI_TOTAL_SAMPLE_COUNT (SSTV_TARGET_IQ_SAMPLE_RATE * 0.5)
+#define PSDI_TOTAL_SAMPLE_COUNT (int)(SSTV_TARGET_IQ_SAMPLE_RATE * 0.01)
+#define PSDI_BUF_SIZE (int)(SSTV_TARGET_IQ_SAMPLE_RATE * 0.01)
 
 
 // SSTV频率范围定义
@@ -44,13 +47,13 @@
 #define FREQ_1500 1500          // 第三个目标频率(Hz)
 #define FREQ_2300 2300          // 第四个目标频率(Hz)
 #define FREQ_TOLERANCE 150      // 频率容差(Hz)
-#define WINDOW_10MS SSTV_TARGET_IQ_SAMPLE_RATE * 0.01         // 10ms窗口大小 (48000 * 0.01)
-#define WINDOW_1MS SSTV_TARGET_IQ_SAMPLE_RATE * 0.001           // 1ms窗口大小 (48000 * 0.001)
-#define WINDOW_250US SSTV_TARGET_IQ_SAMPLE_RATE * 0.00025 // 250us窗口大小 (48000 * 0.00025)
-#define STEP_10MS SSTV_TARGET_IQ_SAMPLE_RATE * 0.01           // 10ms步长
-#define STEP_1MS SSTV_TARGET_IQ_SAMPLE_RATE * 0.001             // 1ms步长
-#define SSTV_SCAN_LINE_LENGTH SSTV_TARGET_IQ_SAMPLE_RATE * 0.088 // 每行的采样点数 (48000 * 0.088)
-#define SSTV_SCAN_LINE_RY_BY_LENGTH SSTV_TARGET_IQ_SAMPLE_RATE * 0.044
+#define WINDOW_10MS (int)(SSTV_TARGET_IQ_SAMPLE_RATE * 0.01)         // 10ms窗口大小 (48000 * 0.01)
+#define WINDOW_1MS (int)(SSTV_TARGET_IQ_SAMPLE_RATE * 0.001)           // 1ms窗口大小 (48000 * 0.001)
+#define WINDOW_250US (int)(SSTV_TARGET_IQ_SAMPLE_RATE * 0.00025) // 250us窗口大小 (48000 * 0.00025)
+#define STEP_10MS (int)(SSTV_TARGET_IQ_SAMPLE_RATE * 0.01)           // 10ms步长
+#define STEP_1MS (int)(SSTV_TARGET_IQ_SAMPLE_RATE * 0.001)             // 1ms步长
+#define SSTV_SCAN_LINE_LENGTH (int)(SSTV_TARGET_IQ_SAMPLE_RATE * 0.088) // 每行的采样点数 (48000 * 0.088)
+#define SSTV_SCAN_LINE_RY_BY_LENGTH (int)(SSTV_TARGET_IQ_SAMPLE_RATE * 0.044)
 #define VIS_LEADER1_MIN_CONSECUTIVE_WINDOWS 295 // VIS同步头前1900hz最小连续窗口数
 #define VIS_SYNC_PULSE_MIN_CONSECUTIVE_WINDOWS 8 // VIS同步脉冲1200hz最小连续窗口数
 #define VIS_LEADER2_MIN_CONSECUTIVE_WINDOWS 295 // VIS同步头后1900hz最小连续窗口数
@@ -60,25 +63,15 @@
 #define PARITY_SYNC_PORCH_MIN_CONSECUTIVE_WINDOWS 4 // 奇偶行同步门廊最小连续窗口数
 
 
-short frequency_buf_10ms[WINDOW_10MS]; // 用于存储10ms的频率数据
-short frequency_buf_1ms[WINDOW_1MS]; // 用于存储10ms的频率数据
-short frequency_buf_88ms[SSTV_SCAN_LINE_LENGTH]; // 用于存储88ms的频率数据
-short frequency_buf_250us[WINDOW_250US]; // 用于存储250us的频率数据
-short frequency_buf_44ms[SSTV_SCAN_LINE_RY_BY_LENGTH]; // 用于存储44ms的频率数据
 
-short Y_88ms[SSTV_SCAN_LINE_LENGTH]; // 用于存储Y信号的88ms数据
-short RBY_44ms[SSTV_SCAN_LINE_RY_BY_LENGTH]; // 用于存储RBY信号的44ms数据
 
-// 全局数据数组
-short fx_y_lines[IMAGE_HEIGHT][IMAGE_WIDTH];      // 存储所有行的Y值
-short fx_ry_lines[IMAGE_HEIGHT/2][IMAGE_WIDTH];   // 存储RY值
-short fx_by_lines[IMAGE_HEIGHT/2][IMAGE_WIDTH];   // 存储BY值
+typedef enum {
+	PARITY_SEARCH_STATE_IDLE,
+	PARITY_SEARCH_STATE_FOUND_EVEN_PULSE,
+	PARITY_SEARCH_STATE_FOUND_ODD_PULSE,
+	PARITY_SEARCH_STATE_SEARCHING_PORCH
 
-unsigned char image_data[IMAGE_WIDTH * IMAGE_HEIGHT * BYTES_PER_PIXEL]; // 存储最终图像数据
-
-//图像保存路径
-const char* bmp_file_path = "sstv_image.bmp";
-
+} Parity_State;
 
 // 状态机状态
 typedef enum {
@@ -111,8 +104,8 @@ typedef enum {
 } SSTV_State;
 
 
-static short calculate_average_short(short* data, int length);
-static int is_vis_freq_match(short freq, short target_freq);
+short calculate_average_short(short* data, int length);
+int is_vis_freq_match(short freq, short target_freq);
 
 // 函数声明
 void fm_demodulate(short* I, short* Q, int length, short* freq_fx, int sample_rate);
@@ -129,6 +122,8 @@ int parity_sync_search();
 void even_scan(int line_number);
 void odd_scan(int line_number);
 void save_image();
+
+void get_power(short* I, short* Q, int length, int* power_buf);
 
 
 #endif // FUNCTION_H
