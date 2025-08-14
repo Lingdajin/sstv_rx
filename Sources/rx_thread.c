@@ -60,7 +60,8 @@ void rx_thread(void *arg) {
         	RX1_capture_ibuf[i] = RX1_psdi_ibuf[5*i];
         	RX1_capture_qbuf[i] = RX1_psdi_qbuf[5*i];
         }
-        printf("\r\n");
+
+        printf("reset1\r\n");
         while(is_interrupt_a2d(ch) != 1){
         	printf(".");
         	sb_osFastPause(10);
@@ -69,12 +70,14 @@ void rx_thread(void *arg) {
         	RX1_capture_ibuf[i] = RX1_psdi_ibuf[5*i];
         	RX1_capture_qbuf[i] = RX1_psdi_qbuf[5*i];
         }
-        printf("i: \r\n");
-        for(int i = 0; i< PSDI_TOTAL_SAMPLE_COUNT / 5; i++){
-        	printf("%d\r\n",RX1_capture_ibuf[i]);
-        }
+        // printf("i: \r\n");
+        // for(int i = 0; i< PSDI_TOTAL_SAMPLE_COUNT / 5; i++){
+        // 	printf("%d\r\n",RX1_capture_ibuf[i]);
+        // }
+        printf("reset2\r\n");
         stop_a2d(core, ch);
-        break; // 仅测试一次，实际应用中可以去掉这个break
+        osFastPause(1000);
+        // break; // 仅测试一次，实际应用中可以去掉这个break
 //        fm_demodulate(RX2_psdi_ibuf, RX2_psdi_qbuf, PSDI_BUF_SIZE, frequency_buf, SSTV_TARGET_IQ_SAMPLE_RATE);
 //
 //        sstv_iq_data_ready_flag = 1; // 设置标志，表示数据块准备就绪
